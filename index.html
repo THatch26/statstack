@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StatStack — Daily Higher or Lower Statistics Game</title>
+  <meta name="description" content="Test your knowledge with StatStack! Guess which statistic is higher or lower in this free daily trivia game. New challenge every day.">
+  <meta name="keywords" content="statistics game, higher or lower, daily game, trivia, number game, StatStack">
+  <link rel="canonical" href="https://thatch26.github.io/statstack/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="StatStack — Daily Higher or Lower Statistics Game">
+  <meta property="og:description" content="Guess which statistic is higher or lower. New challenge every day!">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://thatch26.github.io/statstack/">
+  <meta property="og:image" content="https://thatch26.github.io/statstack/img/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="StatStack — Daily Higher or Lower">
+  <meta name="twitter:description" content="Guess which statistic is higher or lower. New challenge every day!">
+  <meta name="twitter:image" content="https://thatch26.github.io/statstack/img/og-image.png">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "StatStack",
+    "description": "A free daily higher-or-lower statistics guessing game.",
+    "url": "https://thatch26.github.io/statstack/",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0" }
+  }
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">📊</span>
+        <span class="logo-text">StatStack</span>
+      </a>
+      <div class="header-right">
+        <span id="day-number" class="day-number"></span>
+        <button id="help-btn" class="icon-btn" aria-label="How to play" title="How to play">?</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- How to Play Modal -->
+  <div id="help-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close">&times;</button>
+      <h2>How to Play</h2>
+      <p>You'll be shown two real-world statistics. One value is revealed — <strong>guess whether the hidden stat is higher or lower</strong>.</p>
+      <ul>
+        <li>🟩 = Correct guess</li>
+        <li>🟥 = Wrong guess</li>
+        <li>10 rounds per day</li>
+        <li>New puzzle every midnight</li>
+      </ul>
+      <p><strong>Keyboard shortcuts:</strong> ↑ or H = Higher, ↓ or L = Lower, Enter = Next</p>
+      <p>Share your results and challenge your friends!</p>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Ad Slot: Top Banner -->
+    <div class="ad-slot ad-top" id="ad-top">
+      <!-- AdSense placeholder — replace with real ad unit after approval -->
+    </div>
+
+    <!-- Score Bar -->
+    <div class="score-bar">
+      <div class="progress-container">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <div class="score-info">
+        <span id="progress-text" class="progress-text">1 / 10</span>
+        <span class="score-label">Score: <strong id="score-display">0</strong></span>
+      </div>
+    </div>
+
+    <!-- Game Area -->
+    <div id="game-area" class="game-area">
+      <div class="cards-container">
+        <!-- Card A (Known) -->
+        <div id="card-a" class="card card-a">
+          <div class="card-label">Known Value</div>
+          <p id="stat-a-text" class="stat-text"></p>
+          <p id="stat-a-value" class="stat-value"></p>
+          <p id="stat-a-source" class="stat-source"></p>
+        </div>
+
+        <!-- VS Divider -->
+        <div class="vs-divider">
+          <span>VS</span>
+        </div>
+
+        <!-- Card B (Unknown) -->
+        <div id="card-b" class="card card-b">
+          <div class="card-label">Your Guess</div>
+          <p id="stat-b-text" class="stat-text"></p>
+          <p id="stat-b-value" class="stat-value">?</p>
+          <p id="stat-b-source" class="stat-source"></p>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div id="feedback" class="feedback hidden"></div>
+
+      <!-- Guess Buttons -->
+      <div id="guess-buttons" class="guess-buttons">
+        <button id="btn-higher" class="btn btn-higher">
+          <span class="btn-arrow">▲</span>
+          Higher
+        </button>
+        <button id="btn-lower" class="btn btn-lower">
+          <span class="btn-arrow">▼</span>
+          Lower
+        </button>
+      </div>
+
+      <!-- Next Button -->
+      <button id="next-button" class="btn btn-next hidden">Next</button>
+    </div>
+
+    <!-- Results Area -->
+    <div id="results-area" class="results-area hidden">
+      <h2 id="result-title" class="result-title"></h2>
+      <div class="result-score-container">
+        <span id="result-score" class="result-score"></span>
+        <p id="result-message" class="result-message"></p>
+      </div>
+
+      <pre id="result-grid" class="result-grid"></pre>
+
+      <button id="share-button" class="btn btn-share">
+        📋 Share Results
+      </button>
+
+      <!-- Countdown -->
+      <div class="countdown-container">
+        <p class="countdown-label">Next StatStack in</p>
+        <p id="countdown" class="countdown">00:00:00</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stats-item">
+          <span id="stat-played" class="stats-number">0</span>
+          <span class="stats-label">Played</span>
+        </div>
+        <div class="stats-item">
+          <span id="stat-win-pct" class="stats-number">0%</span>
+          <span class="stats-label">7+ Score</span>
+        </div>
+        <div class="stats-item">
+          <span id="stat-current-streak" class="stats-number">0</span>
+          <span class="stats-label">Streak</span>
+        </div>
+        <div class="stats-item">
+          <span id="stat-max-streak" class="stats-number">0</span>
+          <span class="stats-label">Best</span>
+        </div>
+      </div>
+
+      <!-- Ad Slot: Results -->
+      <div class="ad-slot ad-results" id="ad-results">
+        <!-- AdSense placeholder -->
+      </div>
+    </div>
+
+    <!-- Ad Slot: Bottom Banner -->
+    <div class="ad-slot ad-bottom" id="ad-bottom">
+      <!-- AdSense placeholder -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 StatStack &middot; <a href="about.html">About</a> &middot; <a href="privacy.html">Privacy</a></p>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/stats-data.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/game.js"></script>
+  <script>
+    // Help modal
+    document.getElementById('help-btn').addEventListener('click', () => {
+      document.getElementById('help-modal').classList.remove('hidden');
+    });
+    document.querySelector('.modal-close').addEventListener('click', () => {
+      document.getElementById('help-modal').classList.add('hidden');
+    });
+    document.getElementById('help-modal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) e.currentTarget.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

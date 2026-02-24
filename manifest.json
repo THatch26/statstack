@@ -1,0 +1,21 @@
+{
+  "name": "StatStack",
+  "short_name": "StatStack",
+  "description": "Daily higher-or-lower statistics game",
+  "start_url": "/statstack/",
+  "display": "standalone",
+  "background_color": "#0f0f23",
+  "theme_color": "#1a1a2e",
+  "icons": [
+    {
+      "src": "img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

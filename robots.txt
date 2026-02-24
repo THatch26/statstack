@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thatch26.github.io/statstack/sitemap.xml
